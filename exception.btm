@@ -1,0 +1,7 @@
+# example throw exception to show stacktrace
+RULE RuntimeException
+CLASS Timer
+METHOD printTimimg
+IF true
+DO THROW new RuntimeException("reset!")
+ENDRULE
