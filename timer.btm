@@ -1,0 +1,26 @@
+# https://byteman.jboss.org/index.html
+####
+RULE start time
+CLASS Timer
+METHOD methodToTime
+AT ENTRY
+BIND thread = Thread.currentThread();
+  startTime = System.nanoTime()
+  #myLOG:org.slf4j.Logger = org.slf4j.LoggerFactory.getLogger($0.getClass());
+IF true
+DO link("methodToTime.Timer", thread, startTime);
+  traceln("[BYTEMAN] at entry")
+  # myLOG.info($1)
+ENDRULE
+
+####
+RULE end time
+CLASS Timer
+METHOD methodToTime
+AT EXIT
+BIND thread = Thread.currentThread();
+  startTime:long = unlink("methodToTime.Timer", thread);
+  endTime = System.nanoTime()
+IF true
+DO traceln("[BYTEMAN] method elapsedTime = " + (endTime - startTime) + " ns")
+ENDRULE
